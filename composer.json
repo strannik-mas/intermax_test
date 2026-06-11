@@ -37,7 +37,13 @@
 	},
 	"scripts": {
 		"phpstan": "phpstan analyse",
-		"tester": "tester tests -s"
+		"tester": "tester tests -s",
+        "post-install-cmd": [
+            "@php -r \"@mkdir('temp', 0777, true); @mkdir('log', 0777, true);\""
+        ],
+        "post-update-cmd": [
+            "@php -r \"@mkdir('temp', 0777, true); @mkdir('log', 0777, true);\""
+        ]
 	},
 	"minimum-stability": "stable",
 	"config": {
