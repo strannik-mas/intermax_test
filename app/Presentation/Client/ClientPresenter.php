@@ -87,6 +87,7 @@ class ClientPresenter extends Presenter
 
     public function handleAddComment(): void
     {
+        // Validate CSRF token
         $token = $this->getHttpRequest()->getPost('_token');
         $session = $this->getSession()->getSection('csrf');
         if (!isset($session->token) || !hash_equals($session->token, $token)) {
@@ -94,6 +95,7 @@ class ClientPresenter extends Presenter
             return;
         }
 
+        // Validate input parameters
         $activityId = $this->getHttpRequest()->getPost('activityId');
         if (empty($activityId)) {
             $this->sendJson(['success' => false, 'error' => 'Activity ID is required.']);
@@ -108,6 +110,7 @@ class ClientPresenter extends Presenter
         }
 
         try {
+            // Add the comment to the database
             $this->commentService->addComment((int)$activityId, $comment);
             $dateNow = (new \DateTime())->format('Y-m-d H:i:s');
             $this->sendJson([
