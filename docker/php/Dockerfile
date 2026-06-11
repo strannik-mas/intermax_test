@@ -17,8 +17,11 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html/www!g' \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+WORKDIR /var/www/html
+
+RUN mkdir -p /var/www/html/temp /var/www/html/log \
+    && chown -R www-data:www-data /var/www/html/temp /var/www/html/log
+
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
-
-WORKDIR /var/www/html
