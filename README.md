@@ -15,7 +15,7 @@ docker compose up -d --build
 ```
 3. Install dependencies:
 ```bash
-docker compose exec --user www-data app composer install
+docker compose exec app composer install
 ```
 4. Run migrations:
 ```bash
@@ -24,6 +24,10 @@ docker compose exec app php bin/migrate.php
 5. Seed the database:
 ```bash
 docker compose exec app php bin/seed.php
+```
+6. Add owner to temp directory:
+```bash
+docker compose exec app chown -R www-data:www-data /var/www/html/temp
 ```
 6. Open http://localhost:8088
 
