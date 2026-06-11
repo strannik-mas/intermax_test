@@ -1,0 +1,28 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    volumes:
+      - ./:/var/www/html
+    restart: unless-stopped
+    ports:
+      - "8088:80"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.4
+    restart: always
+    environment:
+      MYSQL_DATABASE: intermax_clients
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: intermax
+      MYSQL_PASSWORD: intermax
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:

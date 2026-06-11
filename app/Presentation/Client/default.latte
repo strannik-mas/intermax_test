@@ -1,0 +1,62 @@
+{block content}
+    <h1>Clients list</h1>
+    {* Search Form *}
+    <form method="get" action="">
+        <input class="form-control" name="name" value="{$presenter->getParameter('name')}" placeholder="Name">
+        <input class="form-control" name="email" value="{$presenter->getParameter('email')}" placeholder="Email">
+        <select class="form-select" name="isActive">
+            <option value="">All</option>
+            <option value="1" {if $presenter->getParameter('isActive') === '1'}selected{/if}>Active</option>
+            <option value="0" {if $presenter->getParameter('isActive') === '0'}selected{/if}>Inactive</option>
+        </select>
+        <button class="btn btn-primary" type="submit">Search</button>
+        <a n:href="Client:default">Reset</a>
+    </form>
+
+    {* All clients table *}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>
+                    <a n:href="Client:default, sortBy: 'name', sortOrder: ($presenter->getParameter('sortBy') === 'name' && $presenter->getParameter('sortOrder') === 'ASC') ? 'DESC' : 'ASC'">
+                        Name
+                        {if $presenter->getParameter('sortBy') === 'name'}
+                            {$presenter->getParameter('sortOrder') === 'ASC' ? '↑' : '↓'}
+                        {/if}
+                    </a>
+                </th>
+                <th>
+                    <a n:href="Client:default, sortBy: 'email', sortOrder: ($presenter->getParameter('sortBy') === 'email' && $presenter->getParameter('sortOrder') === 'ASC') ? 'DESC' : 'ASC'">
+                        Email
+                        {if $presenter->getParameter('sortBy') === 'email'}
+                            {$presenter->getParameter('sortOrder') === 'ASC' ? '↑' : '↓'}
+                        {/if}
+                    </a>
+                </th>
+                <th>Status</th>
+                <th>
+                    <a n:href="Client:default, sortBy: 'created_at', sortOrder: ($presenter->getParameter('sortBy') === 'created_at' && $presenter->getParameter('sortOrder') === 'ASC') ? 'DESC' : 'ASC'">
+                        Registration date
+                        {if $presenter->getParameter('sortBy') === 'created_at'}
+                            {$presenter->getParameter('sortOrder') === 'ASC' ? '↑' : '↓'}
+                        {/if}
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        {foreach $clients as $client}
+            <tr>
+                <td><a n:href="Client:detail $client->id">{$client->name}</a></td>
+                <td>{$client->email}</td>
+                <td>
+                    <span class="badge {$client->is_active ? 'bg-success' : 'bg-secondary'}">
+                        {$client->is_active ? 'Active' : 'Inactive'}
+                    </span>
+                </td>
+                <td>{$client->created_at}</td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+{/block}

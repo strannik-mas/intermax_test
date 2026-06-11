@@ -1,0 +1,104 @@
+{block content}
+    <a n:href="Client:default">Home</a>
+    <h1>Client {$client->name} detail page</h1>
+    <h2>Email: {$client->email}</h2>
+    <p>Status: <span class="badge {$client->is_active ? 'bg-success' : 'bg-secondary'}">
+            {$client->is_active ? 'Active' : 'Inactive'}
+        </span>
+    </p>
+
+    {* All client activities table *}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Details</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {foreach $activities as $activity}
+            {* activity data *}
+            <tr>
+                <td>{$activity->activity_type}</td>
+                <td>{$activity->details}</td>
+                <td>{$activity->created_at}</td>
+            </tr>
+            {* comments *}
+            <tr>
+                <td colspan="3">
+                    <strong>Comments:</strong>
+                    <ul id="comments-{$activity->id}">
+                        {foreach $comments[$activity->id] ?? [] as $comment}
+                            <li>{$comment->comment} - <em>{$comment->created_at}</em></li>
+                        {/foreach}
+                    </ul>
+                    <form method="post" action="" class="comment-form d-flex gap-2">
+                        <input type="hidden" name="activityId" value="{$activity->id}">
+                        <input type="hidden" name="_token" value="{$csrfToken}">
+                        <input type="text" name="comment" class="form-control">
+                        <button type="submit" class="btn btn-sm btn-primary">Add</button>
+                    </form>
+                </td>
+            </tr>
+        {/foreach}
+        </tbody>
+    </table>
+    <div class="d-flex mt-3 justify-content-center">
+        {if $currentPage > 1}
+            <a n:href="Client:detail $client->id, page: $currentPage - 1" class="btn btn-secondary">Previous</a>
+        {/if}
+        <span class="mx-2">Page {$currentPage} of {$totalPages}</span>
+        {if $currentPage < $totalPages}
+            <a n:href="Client:detail $client->id, page: $currentPage + 1" class="btn btn-secondary">Next</a>
+        {/if}
+    </div>
+
+    <script>
+        document.querySelectorAll('.comment-form').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                //disable default form submission
+                e.preventDefault();
+
+                const activityId = form.querySelector('input[name="activityId"]').value;
+                const comment = form.querySelector('input[name="comment"]').value.trim();
+
+                if (!comment) {
+                    alert('Comment cannot be empty');
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append('activityId', activityId);
+                formData.append('comment', comment);
+                formData.append('_token', form.querySelector('input[name="_token"]').value);
+
+                try {
+                    const response = await fetch('?do=addComment', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        if (data.success) {
+                            // Add new comment to the list
+                            const commentList = document.getElementById('comments-' + activityId);
+                            const newComment = document.createElement('li');
+                            newComment.textContent = data.comment + ' - ' + data.created_at;
+                            commentList.appendChild(newComment);
+                            form.reset();
+                        } else {
+                            alert(data.error || 'Failed to add comment');
+                        }
+                    } else {
+                        alert('Error adding comment');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('An error occurred while adding the comment');
+                }
+            });
+        })
+    </script>
+{/block}
