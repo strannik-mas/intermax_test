@@ -15,9 +15,10 @@ RUN sed -ri -e 's!/var/www/html!/var/www/html/www!g' \
     /etc/apache2/apache2.conf \
     /etc/apache2/conf-available/*.conf
 
-RUN mkdir -p /var/www/html/temp /var/www/html/log \
-    && chmod -R 777 /var/www/html/temp /var/www/html/log
-
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+ENTRYPOINT ["entrypoint.sh"]
 
 WORKDIR /var/www/html
