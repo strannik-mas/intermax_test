@@ -17,19 +17,15 @@ docker compose up -d --build
 ```bash
 docker compose exec app composer install
 ```
-4. Create log and temp directories:
-```bash
-mkdir -p log temp && chmod 777 log temp
-```
-5. Run migrations:
+4. Run migrations:
 ```bash
 docker compose exec app php bin/migrate.php
 ```
-6. Seed the database:
+5. Seed the database:
 ```bash
 docker compose exec app php bin/seed.php
 ```
-7. Open http://localhost:8088
+6. Open http://localhost:8088
 
 ## Architecture Overview
 
