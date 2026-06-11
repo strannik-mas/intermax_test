@@ -6,6 +6,10 @@ services:
     volumes:
       - ./:/var/www/html
     restart: unless-stopped
+    entrypoint: >
+      sh -c "mkdir -p /var/www/html/log /var/www/html/temp
+      && chmod 777 /var/www/html/log /var/www/html/temp
+      && apache2-foreground"
     ports:
       - "8088:80"
     depends_on:
