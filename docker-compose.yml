@@ -5,6 +5,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./:/var/www/html
+      - nette_temp:/var/www/html/temp
     restart: unless-stopped
     ports:
       - "8088:80"
@@ -26,3 +27,4 @@ services:
 
 volumes:
   mysql_data:
+  nette_temp:
