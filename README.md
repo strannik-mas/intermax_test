@@ -15,7 +15,7 @@ docker compose up -d --build
 ```
 3. Install dependencies:
 ```bash
-docker compose exec app composer install
+docker compose exec --user www-data app composer install
 ```
 4. Run migrations:
 ```bash
