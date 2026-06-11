@@ -29,7 +29,7 @@ docker compose exec app php bin/seed.php
 ```bash
 docker compose exec app chown -R www-data:www-data /var/www/html/temp
 ```
-6. Open http://localhost:8088
+7. Open http://localhost:8088
 
 ## Architecture Overview
 
