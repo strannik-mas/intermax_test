@@ -2,7 +2,7 @@ services:
   app:
     build:
       context: ./docker/php
-      dockerfile: docker/php/Dockerfile
+      dockerfile: Dockerfile
     volumes:
       - ./:/var/www/html
     restart: unless-stopped
