@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     entrypoint: >
       sh -c "mkdir -p /var/www/html/log /var/www/html/temp
-      && chmod 777 /var/www/html/log /var/www/html/temp
+      && chown -R www-data:www-data /var/www/html/log /var/www/html/temp
       && apache2-foreground"
     ports:
       - "8088:80"
